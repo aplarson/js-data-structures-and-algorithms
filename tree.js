@@ -49,15 +49,14 @@ PolyTreeNode.prototype.BFS = function (target) {
   return null;
 };
 
-function RedBlackTreeNode (value) {
+function UnbalancedBSTNode (value) {
   this.value = value;
   this.left = null;
   this.right = null;
   this.parent = null;
-  this.color = "red";
 }
 
-RedBlackTreeNode.prototype.delete = function (value) {
+UnbalancedBSTNode.prototype.delete = function (value) {
   var node = this.get(value);
   if (!node) {
     return false;
@@ -90,7 +89,7 @@ RedBlackTreeNode.prototype.delete = function (value) {
   return true;
 };
 
-RedBlackTreeNode.prototype.get = function (value) {
+UnbalancedBSTNode.prototype.get = function (value) {
   if (this.value == value) {
     return this;
   } else if (this.value > value && this.left) {
@@ -101,20 +100,20 @@ RedBlackTreeNode.prototype.get = function (value) {
   return null;
 };
 
-RedBlackTreeNode.prototype.insert = function (value) {
+UnbalancedBSTNode.prototype.insert = function (value) {
   var node;
   if (this.value === value) {
     return false;
   } else if (this.value > value) {
     if (!this.left) {
-      this.left = new RedBlackTreeNode(value);
+      this.left = new UnbalancedBSTNode(value);
       this.left.parent = this;
       return true;
     }
     node = this.left;
   } else {
     if (!this.right) {
-      this.right = new RedBlackTreeNode(value);
+      this.right = new UnbalancedBSTNode(value);
       this.right.parent = this;
       return true;
     }
