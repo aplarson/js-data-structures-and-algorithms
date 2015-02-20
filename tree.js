@@ -49,11 +49,11 @@ PolyTreeNode.prototype.BFS = function (target) {
   return null;
 };
 
-function UnbalancedBSTNode (value) {
+function UnbalancedBSTNode (value, parent) {
   this.value = value;
   this.left = null;
   this.right = null;
-  this.parent = null;
+  this.parent = parent;
 }
 
 UnbalancedBSTNode.prototype.delete = function (value) {
@@ -67,17 +67,21 @@ UnbalancedBSTNode.prototype.delete = function (value) {
   } else {
     var position = "right";
   }
+  // Case 1: delete leaf
   if (!node.left && !node.right) {
     parent[position] = null;
     node.parent = null;
+  // Case 2: delete node with only left child
   } else if (node.left && !node.right) {
     parent[position] = node.left;
     node.parent = null;
     node.left = null;
+  // Case 3: delete node with only right child
   } else if (node.right && !node.left) {
     parent[position] = node.right;
     node.parent = null;
     node.right = null;
+  // Case 4: delete node with two children
   } else {
     var predecessor = node.left;
     while (predecessor.right) {
@@ -106,15 +110,13 @@ UnbalancedBSTNode.prototype.insert = function (value) {
     return false;
   } else if (this.value > value) {
     if (!this.left) {
-      this.left = new UnbalancedBSTNode(value);
-      this.left.parent = this;
+      this.left = new UnbalancedBSTNode(value, this);
       return true;
     }
     node = this.left;
   } else {
     if (!this.right) {
-      this.right = new UnbalancedBSTNode(value);
-      this.right.parent = this;
+      this.right = new UnbalancedBSTNode(value, this);
       return true;
     }
     node = this.right;
