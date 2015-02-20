@@ -2,6 +2,10 @@ function AVLTree (value) {
   this.root = new AVLTreeNode(value, null);
 }
 
+AVLTree.prototype.find = function (value) {
+  return this.root.find(value);
+};
+
 AVLTree.prototype.height = function () {
   return this.root.height();
 };
@@ -36,6 +40,26 @@ AVLTreeNode.prototype.balanceFactor = function () {
   right = this.right === null ? 0 : this.right.height();
   left = this.left === null ? 0 : this.left.height();
   return left - right;
+};
+
+AVLTreeNode.prototype.find = function (value) {
+  var result;
+  if (this.value === value) {
+    return this;
+  } else if (this.value > value) {
+    if (!this.left) {
+      result = null;
+    } else {
+      result = this.left.find(value);
+    }
+  } else {
+    if (!this.right) {
+      result = null;
+    } else {
+      result = this.right.find(value);
+    }
+  }
+  return result;
 };
 
 AVLTreeNode.prototype.height = function () {
@@ -129,7 +153,7 @@ AVLTreeNode.prototype.rotateRight = function () {
   this.left.right = this;
   this.left.parent = this.parent;
   if (this.parent) {
-    this.parent.left = this.left;  
+    this.parent.left = this.left;
   }
   this.parent = this.left;
   this.left = swapBranch;
