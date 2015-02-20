@@ -2,12 +2,25 @@ function AVLTree (value) {
   this.root = new AVLTreeNode(value, null);
 }
 
+AVLTree.prototype.delete = function (value) {
+  var node = this.find(value);
+  if (!node) {
+    return false;
+  }
+  this.root = node.delete();
+  return true;
+};
+
 AVLTree.prototype.find = function (value) {
   return this.root.find(value);
 };
 
 AVLTree.prototype.height = function () {
   return this.root.height();
+};
+
+AVLTree.prototype.include = function (value) {
+  return !!this.find(value);
 };
 
 AVLTree.prototype.insert = function (value) {
@@ -42,6 +55,31 @@ AVLTreeNode.prototype.balanceFactor = function () {
   return left - right;
 };
 
+AVLTreeNode.prototype.delete = function () {
+  var replacement, swapValue, repParent;
+  if (!this.left && !this.right) {
+    this === this.parent.left ? this.parent.left = null : this.parent.right = null;
+    repParent = this.parent;
+    this.parent = null;
+    return repParent.rotate();
+  }
+  replacement = this.left ? this.findPredecessor() : this.findSuccessor();
+  swapValue = this.value;
+  this.value = replacement.value;
+  replacement.value = swapValue;
+  repParent = replacement.parent;
+  if (replacement.right) {
+    replacement.right.parent = repParent;
+    repParent.right = replacement.right;
+  } else if (replacement.left) {
+    replacement.left.parent = repParent;
+    repParent.left = replacement.left;
+  }
+  replacement === repParent.left ? repParent.left = null : repParent.right = null;
+  replacement.parent = null;
+  return repParent.rotate();
+};
+
 AVLTreeNode.prototype.find = function (value) {
   var result;
   if (this.value === value) {
@@ -60,6 +98,24 @@ AVLTreeNode.prototype.find = function (value) {
     }
   }
   return result;
+};
+
+AVLTreeNode.prototype.findPredecessor = function () {
+  var currentNode;
+  currentNode = this.left;
+  while (currentNode.right) {
+    currentNode = currentNode.right;
+  }
+  return currentNode;
+};
+
+AVLTreeNode.prototype.findSuccessor = function () {
+  var currentNode;
+  currentNode = this.right;
+  while (currentNode.left) {
+    currentNode = currentNode.left;
+  }
+  return currentNode;
 };
 
 AVLTreeNode.prototype.height = function () {
