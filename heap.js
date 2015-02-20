@@ -5,7 +5,7 @@ function BTreeHeap () {
 BTreeHeap.prototype.childVals = function (parentIdx) {
   var left = this.heap[2 * parentIdx + 1];
   var right = this.heap[(2 * parentIdx) + 2];
-  if (typeof left === "undefined" && typeof right === "undefined") {
+  if (typeof left === "undefined") {
     return [];
   } else if (typeof right === "undefined") {
     return [left];
@@ -15,8 +15,12 @@ BTreeHeap.prototype.childVals = function (parentIdx) {
 
 BTreeHeap.prototype.extract = function () {
   var min = this.heap[0];
-  this.heap[0] = this.heap.pop();
-  this.heapifyDown(0);
+  if (this.heap.length > 1) {
+    this.heap[0] = this.heap.pop();
+    this.heapifyDown(0);
+  } else {
+    this.heap.pop();
+  }
   return min;
 };
 
@@ -30,9 +34,9 @@ BTreeHeap.prototype.heapifyDown = function (parentIdx) {
   var minIdx = values.indexOf(min);
   if (minIdx !== 0) {
     var childIdx = (2 * parentIdx) + minIdx;
-    var childVal = this.heap[childIdx];
+    var switchVal = this.heap[childIdx];
     this.heap[childIdx] = this.heap[parentIdx];
-    this.heap[parentIdx] = childVal;
+    this.heap[parentIdx] = switchVal;
     this.heapifyDown(childIdx);
   }
   return true;
