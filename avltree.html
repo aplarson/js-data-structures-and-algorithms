@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="./avltree.css" type="text/css">
+<script src="./avltree.js"></script>
+<script src="./jquery-1.11.2.min.js"></script>
+
+<div id="tree">
+</div>
+
+
+<script>
+  var t = new AVLTree(5);
+
+  var v = new AVLTreeIllustrator(t);
+  for (var i = 0; i < 25; i++) {
+    v.insert(i);
+  }
+</script>

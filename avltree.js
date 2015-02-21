@@ -75,7 +75,12 @@ AVLTreeNode.prototype.delete = function () {
     replacement.left.parent = repParent;
     repParent.left = replacement.left;
   }
-  replacement === repParent.left ? repParent.left = null : repParent.right = null;
+  // replacement === repParent.left ? repParent.left = null : repParent.right = null;
+  if (replacement === repParent.right) {
+    repParent.right = null;
+  } else if (replacement === repParent.left) {
+    repParent.left = null;
+  }
   replacement.parent = null;
   return repParent.rotate();
 };
@@ -186,10 +191,13 @@ AVLTreeNode.prototype.rotateLeft = function () {
   this.right.left = this;
   this.right.parent = this.parent;
   if (this.parent) {
-    this.parent.right = this.right;
+    this === this.parent.left ? this.parent.left = this.right : this.parent.right = this.right;
   }
   this.parent = this.right;
   this.right = swapBranch;
+  if (this.right) {
+    this.right.parent = this;
+  }
 };
 
 AVLTreeNode.prototype.rotateRight = function () {
@@ -209,8 +217,52 @@ AVLTreeNode.prototype.rotateRight = function () {
   this.left.right = this;
   this.left.parent = this.parent;
   if (this.parent) {
-    this.parent.left = this.left;
+    this === this.parent.left ? this.parent.left = this.left : this.parent.right = this.left;
   }
   this.parent = this.left;
   this.left = swapBranch;
+  if (this.left) {
+    this.left.parent = this;
+  }
+};
+
+function AVLTreeIllustrator (tree) {
+  this.$el = $('#tree');
+  this.tree = tree;
+}
+
+AVLTreeIllustrator.prototype.buildNode = function (node) {
+  var $node, $value, $children;
+  $node = $('<div>').addClass('node');
+  if (node === this.tree.root) {
+    $node.addClass('root');
+  }
+  $value = $('<p>').addClass('value').text(node.value);
+  $node.append($value);
+  $children = $('<div>').addClass('children');
+  if (node.left) {
+    $children.append(this.buildNode(node.left));
+  } else {
+    $children.append($('<div>').addClass('placeholder'));
+  }
+  if (node.right) {
+    $children.append(this.buildNode(node.right));
+  }
+  $node.append($children);
+  return $node;
+};
+
+AVLTreeIllustrator.prototype.delete = function (value) {
+  this.tree.delete(value);
+  this.drawTree();
+};
+
+AVLTreeIllustrator.prototype.drawTree = function () {
+  this.$el.empty();
+  this.$el.append(this.buildNode(this.tree.root));
+};
+
+AVLTreeIllustrator.prototype.insert = function (node) {
+  this.tree.insert(node);
+  this.drawTree();
 };
