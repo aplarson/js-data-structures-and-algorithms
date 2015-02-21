@@ -70,12 +70,11 @@ AVLTreeNode.prototype.delete = function () {
   repParent = replacement.parent;
   if (replacement.right) {
     replacement.right.parent = repParent;
-    repParent.right = replacement.right;
+    repParent.left = replacement.right;
   } else if (replacement.left) {
     replacement.left.parent = repParent;
-    repParent.left = replacement.left;
+    repParent.right = replacement.left;
   }
-  // replacement === repParent.left ? repParent.left = null : repParent.right = null;
   if (replacement === repParent.right) {
     repParent.right = null;
   } else if (replacement === repParent.left) {
@@ -88,7 +87,7 @@ AVLTreeNode.prototype.delete = function () {
 AVLTreeNode.prototype.find = function (value) {
   var result;
   if (this.value === value) {
-    return this;
+    result = this;
   } else if (this.value > value) {
     if (!this.left) {
       result = null;
