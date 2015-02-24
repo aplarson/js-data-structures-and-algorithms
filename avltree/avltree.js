@@ -81,29 +81,19 @@ AVLTreeNode.prototype.balanceFactor = function () {
 AVLTreeNode.prototype.delete = function () {
   var replacement, swapValue, repParent;
   if (!this.left && !this.right) {
-    this === this.parent.left ? this.parent.left = null : this.parent.right = null;
     repParent = this.parent;
-    this.parent = null;
-    return repParent.rotate();
+    repParent.removeChild(this);
+  } else {
+    replacement = this.left ? this.findPredecessor() : this.findSuccessor();
+    this.swapValue(replacement);
+    repParent = replacement.parent;
+    if (replacement.right) {
+      repParent.addChild(replacement.right, "left");
+    } else if (replacement.left) {
+      repParent.addChild(replacement.left, "right");
+    }
+    repParent.removeChild(replacement);
   }
-  replacement = this.left ? this.findPredecessor() : this.findSuccessor();
-  swapValue = this.value;
-  this.value = replacement.value;
-  replacement.value = swapValue;
-  repParent = replacement.parent;
-  if (replacement.right) {
-    replacement.right.parent = repParent;
-    repParent.left = replacement.right;
-  } else if (replacement.left) {
-    replacement.left.parent = repParent;
-    repParent.right = replacement.left;
-  }
-  if (replacement === repParent.right) {
-    repParent.right = null;
-  } else if (replacement === repParent.left) {
-    repParent.left = null;
-  }
-  replacement.parent = null;
   return repParent.rotate();
 };
 
@@ -137,7 +127,7 @@ AVLTreeNode.prototype.findSuccessor = function () {
 };
 
 AVLTreeNode.prototype.insert = function (node) {
-  var nextNode, direction, result, subHeight;
+  var nextNode, direction, result;
   if (node.value === this.value) {
     return false;
   } else {
@@ -223,6 +213,12 @@ AVLTreeNode.prototype.rotateRight = function () {
     swapBranch.addChild(this, "right");
   }
   this.updateHeight();
+};
+
+AVLTreeNode.prototype.swapValue = function (replacement) {
+  swapValue = this.value;
+  this.value = replacement.value;
+  replacement.value = swapValue;
 };
 
 AVLTreeNode.prototype.updateHeight = function () {

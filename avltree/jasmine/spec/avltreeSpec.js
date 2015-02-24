@@ -159,5 +159,28 @@ describe("AVLTree", function () {
     t = new AVLTree();
     insertSequence(t, [5, 7, 9, 10, 11, 12]);
     expect(t.find(1)).toEqual(null);
-  })
+  });
+
+  it("deletes leaves", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9]);
+    t.delete(9);
+    expect(t.find(9)).toEqual(null);
+  });
+
+  it("deletes nodes with children", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    t.delete(7);
+    expect(t.find(7)).toEqual(null);
+    expect(t.find(5)).toEqual(t.left());
+    expect(t.find(9)).toEqual(t.left().right);
+  });
+
+  it("deletes the root", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    t.delete(10);
+    expect(t.root.value).toEqual(9);
+  });
 });
