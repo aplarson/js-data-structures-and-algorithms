@@ -79,22 +79,21 @@ AVLTreeNode.prototype.balanceFactor = function () {
 };
 
 AVLTreeNode.prototype.delete = function () {
-  var replacement, swapValue, repParent;
-  if (!this.left && !this.right) {
-    repParent = this.parent;
-    repParent.removeChild(this);
-  } else {
-    replacement = this.left ? this.findPredecessor() : this.findSuccessor();
-    this.swapValue(replacement);
-    repParent = replacement.parent;
-    if (replacement.right) {
-      repParent.addChild(replacement.right, "left");
-    } else if (replacement.left) {
-      repParent.addChild(replacement.left, "right");
+  if (this.parent) {
+    if (!this.left || !this.right) {
+     this.parent.removeChild(this);
     }
-    repParent.removeChild(replacement);
+  } else {
+    if (!this.left || !this.right) {
+      var direction = this.left ? "left" : "right";
+      this[direction].parent = null;
+      this[direction] = null;
+    } else {
+      var swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
+      this.swap(swapNode);
+      this.delete();
+    }
   }
-  return repParent.rotate();
 };
 
 AVLTreeNode.prototype.find = function (value) {
@@ -149,7 +148,13 @@ AVLTreeNode.prototype.removeChild = function (child) {
   } else if (this.right === child) {
     direction = "right";
   }
-  this[direction] = null;
+  if (child.left) {
+    this[direction] = child.left;
+  } else if (child.right) {
+    this[direction] = child.right;
+  } else {
+    this[direction] = null;
+  }
   child.parent = null;
   this.updateHeight();
   return child;
@@ -212,10 +217,27 @@ AVLTreeNode.prototype.rotateRight = function () {
   }
 };
 
-AVLTreeNode.prototype.swapValue = function (replacement) {
-  swapValue = this.value;
-  this.value = replacement.value;
-  replacement.value = swapValue;
+AVLTreeNode.prototype.side = function () {
+  return this === this.parent.left ? "left" : "right";
+};
+
+AVLTreeNode.prototype.swap = function (replacement) {
+  var ownConnections = {
+      parent: this.parent,
+      left: this.left,
+      right: this.right
+    };
+  var repConnections = {
+      parent: replacement.parent,
+      left: replacement.left,
+      right: replacement.right
+    };
+  for (key in ownConnections) {
+    replacement[key] = ownConnections[key];
+  }
+  for (key in repConnections) {
+    this[key] = repConnections[key];
+  }
 };
 
 AVLTreeNode.prototype.updateHeight = function () {

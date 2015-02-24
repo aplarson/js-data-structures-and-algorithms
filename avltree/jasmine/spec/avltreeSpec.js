@@ -40,6 +40,42 @@ describe("AVLTreeNode", function () {
     n1.insert(n2);
     expect(n1.height).toEqual(2);
   });
+
+  it("can be deleted", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n1.insert(n2);
+    n2.delete();
+    expect(n1.left).toEqual(null);
+  });
+
+  it("can be deleted with a left child", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n1.insert(n2);
+    n1.delete();
+    expect(n2.parent).toEqual(null);
+  });
+
+  it("can be deleted with a right child", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(7);
+    n1.insert(n2);
+    n1.delete();
+    expect(n2.parent).toEqual(null);
+  });
+
+  it("can be deleted with two children", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n1.insert(n3);
+    n1.insert(n2);
+    n1.delete();
+    expect(n2.parent).toEqual(null);
+    expect(n3.parent).toEqual(n2);
+    expect(n2.right).toEqual(n3);
+  });
 });
 
 describe("AVLTree", function () {
