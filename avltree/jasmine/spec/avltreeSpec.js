@@ -136,4 +136,28 @@ describe("AVLTree", function () {
     expect(t.left().right.value).toEqual(9);
     expect(t.left().right.parent).toEqual(t.left());
   });
+
+  it("finds the value at the root", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    expect(t.find(10)).toEqual(t.root);
+  });
+
+  it("finds values on the right", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    expect(t.find(12)).toEqual(t.right().right);
+  });
+
+  it("finds values on the left", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    expect(t.find(5)).toEqual(t.left().left);
+  });
+
+  it("returns null when value not found", function () {
+    t = new AVLTree();
+    insertSequence(t, [5, 7, 9, 10, 11, 12]);
+    expect(t.find(1)).toEqual(null);
+  })
 });

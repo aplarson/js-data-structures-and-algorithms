@@ -111,18 +111,9 @@ AVLTreeNode.prototype.find = function (value) {
   var result;
   if (this.value === value) {
     result = this;
-  } else if (this.value > value) {
-    if (!this.left) {
-      result = null;
-    } else {
-      result = this.left.find(value);
-    }
   } else {
-    if (!this.right) {
-      result = null;
-    } else {
-      result = this.right.find(value);
-    }
+    direction = this.value > value ? "left" : "right";
+    result = this[direction] ? this[direction].find(value) : null;
   }
   return result;
 };
