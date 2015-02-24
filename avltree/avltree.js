@@ -147,11 +147,12 @@ AVLTreeNode.prototype.removeChild = function (child) {
   if (this.left === child) {
     direction = "left";
   } else if (this.right === child) {
-    direction = "right"
+    direction = "right";
   }
   this[direction] = null;
   child.parent = null;
   this.updateHeight();
+  return child;
 };
 
 AVLTreeNode.prototype.rotate = function () {
@@ -180,8 +181,7 @@ AVLTreeNode.prototype.rotateLeft = function () {
   // add right to parent
   // attach to old right
   // attach old right's left to this
-  swapBranch = this.right;
-  this.right = null;
+  swapBranch = this.removeChild(this.right);
   if (this.parent) {
     direction = this === this.parent.left ? "left" : "right";
     this.parent.addChild(swapBranch, direction);
@@ -189,7 +189,6 @@ AVLTreeNode.prototype.rotateLeft = function () {
     swapBranch.parent = null;
     swapBranch.addChild(this, "left");
   }
-  this.updateHeight();
 };
 
 AVLTreeNode.prototype.rotateRight = function () {
@@ -203,8 +202,7 @@ AVLTreeNode.prototype.rotateRight = function () {
   // add left to parent
   // attach to old left
   // attach old left's right to this
-  swapBranch = this.left;
-  this.left = null;
+  swapBranch = this.removeChild(this.left);
   if (this.parent) {
     direction = this === this.parent.left ? "left" : "right";
     this.parent.addChild(swapBranch, direction);
@@ -212,7 +210,6 @@ AVLTreeNode.prototype.rotateRight = function () {
     swapBranch.parent = null;
     swapBranch.addChild(this, "right");
   }
-  this.updateHeight();
 };
 
 AVLTreeNode.prototype.swapValue = function (replacement) {
