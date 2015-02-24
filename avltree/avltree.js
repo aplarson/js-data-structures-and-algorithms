@@ -68,6 +68,7 @@ AVLTreeNode.prototype.addChild = function (node, direction) {
     swapDirection = swapNode.value < node.value ? "left" : "right";
     node.addChild(swapNode, swapDirection);
   }
+  this.updateHeight();
 };
 
 AVLTreeNode.prototype.balanceFactor = function () {
@@ -152,23 +153,24 @@ AVLTreeNode.prototype.insert = function (node) {
     direction = node.value > this.value ? "right" : "left";
     if (!this[direction]) {
       this.addChild(node, direction);
-      this.updateHeight();
       return this.rotate();
     }
     nextNode = this[direction];
   }
   result = nextNode.insert(node);
-  if (result) {
-    this.updateHeight();
-  }
   return result;
 };
 
 AVLTreeNode.prototype.removeChild = function (child) {
   var direction;
-  direction = this.left === child ? "left" : "right";
+  if (this.left === child) {
+    direction = "left";
+  } else if (this.right === child) {
+    direction = "right"
+  }
   this[direction] = null;
   child.parent = null;
+  this.updateHeight();
 };
 
 AVLTreeNode.prototype.rotate = function () {
@@ -202,28 +204,20 @@ AVLTreeNode.prototype.rotateLeft = function () {
   // add right to parent
   // attach to old right
   // attach old right's left to this
-  swapBranch = this.right.left;
+  swapBranch = this.right;
+  this.right = null;
   if (this.parent) {
     direction = this === this.parent.left ? "left" : "right";
-    this.parent[direction] = this.right;
-  }
-  this.right.left = this;
-  this.right.parent = this.parent;
-  this.parent = this.right;
-  // if (swapBranch) {
-  //   this.addChild(swapBranch, "right");
-  // } else {
-  //   this.right = null;
-  // }
-  this.right = swapBranch;
-  if (this.right) {
-    this.right.parent = this;
+    this.parent.addChild(swapBranch, direction);
+  } else {
+    swapBranch.parent = null;
+    swapBranch.addChild(this, "left");
   }
   this.updateHeight();
 };
 
 AVLTreeNode.prototype.rotateRight = function () {
-  var childBalance, grandchild, swapBranch;
+  var childBalance, grandchild, swapBranch, direction;
   childBalance = this.left.balanceFactor();
   if (childBalance === -1) {
     // child is unbalanced right; reduce to unbalanced left
@@ -235,16 +229,17 @@ AVLTreeNode.prototype.rotateRight = function () {
     grandchild.parent = this;
     this.left = grandchild;
   }
-  swapBranch = this.left.right;
-  this.left.right = this;
-  this.left.parent = this.parent;
+  // add left to parent
+  // attach to old left
+  // attach old left's right to this
+  swapBranch = this.left;
+  this.left = null;
   if (this.parent) {
-    this === this.parent.left ? this.parent.left = this.left : this.parent.right = this.left;
-  }
-  this.parent = this.left;
-  this.left = swapBranch;
-  if (this.left) {
-    this.left.parent = this;
+    direction = this === this.parent.left ? "left" : "right";
+    this.parent.addChild(swapBranch, direction);
+  } else {
+    swapBranch.parent = null;
+    swapBranch.addChild(this, "right");
   }
   this.updateHeight();
 };
