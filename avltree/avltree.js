@@ -194,12 +194,7 @@ AVLTreeNode.prototype.rotateLeft = function () {
   if (childBalance === 1) {
     // child is unbalanced left; reduce to unbalanced right
     grandchild = this.right.left;
-    swapBranch = grandchild.right;
-    grandchild.right = this.right;
-    grandchild.right.left = swapBranch;
-    grandchild.right.parent = grandchild;
-    grandchild.parent = this;
-    this.right = grandchild;
+    this.addChild(grandchild, "right");
   }
   // add right to parent
   // attach to old right
@@ -222,12 +217,7 @@ AVLTreeNode.prototype.rotateRight = function () {
   if (childBalance === -1) {
     // child is unbalanced right; reduce to unbalanced left
     grandchild = this.left.right;
-    swapBranch = grandchild.left;
-    grandchild.left = this.left;
-    grandchild.left.right = swapBranch;
-    grandchild.left.parent = grandchild;
-    grandchild.parent = this;
-    this.left = grandchild;
+    this.addChild(grandchild, "left");
   }
   // add left to parent
   // attach to old left
