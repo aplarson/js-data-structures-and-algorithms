@@ -80,18 +80,32 @@ AVLTreeNode.prototype.balanceFactor = function () {
 
 AVLTreeNode.prototype.delete = function () {
   if (this.parent) {
+    var parent = this.parent;
+    var direction = this.side();
     if (!this.left || !this.right) {
-     this.parent.removeChild(this);
+      this.parent.removeChild(this);
+      if (this.left) {
+        parent.addChild(this.left, direction);
+      } else if (this.right) {
+        parent.addChild(this.right, direction);
+      }
+      return parent.rotate();
+    } else {
+      var swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
+      this.swap(swapNode);
+      return this.delete();
     }
   } else {
     if (!this.left || !this.right) {
       var direction = this.left ? "left" : "right";
+      var newRoot = this[direction];
       this[direction].parent = null;
       this[direction] = null;
+      return newRoot;
     } else {
       var swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
       this.swap(swapNode);
-      this.delete();
+      return this.delete();
     }
   }
 };
@@ -223,6 +237,9 @@ AVLTreeNode.prototype.swap = function (replacement) {
   if (replacement.parent === this) {
     var direction = replacement.side();
     var opposite = replacement.opposite();
+    if (this.parent) {
+      var ownDir = this.side();
+    }
     var repBranches = {
       left: replacement.left,
       right: replacement.right
@@ -239,6 +256,9 @@ AVLTreeNode.prototype.swap = function (replacement) {
     }
     this[opposite] = repBranches[opposite];
     replacement.parent = this.parent;
+    if (replacement.parent) {
+      replacement.parent[ownDir] = replacement;
+    }
     this.parent = replacement;
   } else {
     var repSide = replacement.side();

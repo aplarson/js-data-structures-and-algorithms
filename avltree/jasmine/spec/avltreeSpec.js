@@ -233,7 +233,6 @@ describe("AVLTree", function () {
 
   it("rotates subtrees right", function () {
     t = new AVLTree();
-    debugger
     insertSequence(t, [5, 7, 9, 2, 1]);
     expect(t.left().value).toEqual(2);
     expect(t.left().left.value).toEqual(1);
