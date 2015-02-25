@@ -234,13 +234,14 @@ AVLTreeNode.prototype.side = function () {
 };
 
 AVLTreeNode.prototype.swap = function (replacement) {
+  var direction, opposite, ownCons, ownSide, repBranches, repCons, repSide;
   if (replacement.parent === this) {
-    var direction = replacement.side();
-    var opposite = replacement.opposite();
+    direction = replacement.side();
+    opposite = replacement.opposite();
     if (this.parent) {
-      var ownDir = this.side();
+      ownSide = this.side();
     }
-    var repBranches = {
+    repBranches = {
       left: replacement.left,
       right: replacement.right
     }
@@ -257,20 +258,20 @@ AVLTreeNode.prototype.swap = function (replacement) {
     this[opposite] = repBranches[opposite];
     replacement.parent = this.parent;
     if (replacement.parent) {
-      replacement.parent[ownDir] = replacement;
+      replacement.parent[ownSide] = replacement;
     }
     this.parent = replacement;
   } else {
-    var repSide = replacement.side();
-    var repCons = {
+    repSide = replacement.side();
+    repCons = {
         left: replacement.left,
         right: replacement.right,
         parent: replacement.parent
       }
     if (this.parent) {
-      var ownSide = this.side();
+      ownSide = this.side();
     }
-    var ownCons = {
+    ownCons = {
         left: this.left,
         right: this.right,
         parent: this.parent

@@ -320,5 +320,6 @@ describe("AVLTree", function () {
     insertSequence(t, [5, 7, 9, 10, 11, 12]);
     t.delete(10);
     expect(t.root.value).toEqual(9);
+    expect(t.left().value).toEqual(7);
   });
 });
