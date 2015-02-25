@@ -141,6 +141,10 @@ AVLTreeNode.prototype.insert = function (node) {
   return result;
 };
 
+AVLTreeNode.prototype.opposite = function () {
+  return this.parent.left ===  this ? "right" : "left";
+};
+
 AVLTreeNode.prototype.removeChild = function (child) {
   var direction;
   if (this.left === child) {
@@ -222,21 +226,57 @@ AVLTreeNode.prototype.side = function () {
 };
 
 AVLTreeNode.prototype.swap = function (replacement) {
-  var ownConnections = {
-      parent: this.parent,
-      left: this.left,
-      right: this.right
-    };
-  var repConnections = {
-      parent: replacement.parent,
+  if (replacement.parent === this) {
+    var direction = replacement.side();
+    var opposite = replacement.opposite();
+    var repBranches = {
       left: replacement.left,
       right: replacement.right
-    };
-  for (key in ownConnections) {
-    replacement[key] = ownConnections[key];
-  }
-  for (key in repConnections) {
-    this[key] = repConnections[key];
+    }
+    replacement[direction] = this;
+    this[direction] = null;
+    replacement[opposite] = this[opposite];
+    if (replacement[opposite]) {
+      replacement[opposite].parent = replacement;
+    }
+    this[direction] = repBranches[direction];
+    if (this[direction]) {
+      this[direction].parent = this;
+    }
+    this[opposite] = repBranches[opposite];
+    replacement.parent = this.parent;
+    this.parent = replacement;
+  } else {
+    var repSide = replacement.side();
+    var repCons = {
+        left: replacement.left,
+        right: replacement.right,
+        parent: replacement.parent
+      }
+    if (this.parent) {
+      var ownSide = this.side();
+    }
+    var ownCons = {
+        left: this.left,
+        right: this.right,
+        parent: this.parent
+      }
+    for (con in repCons) {
+      this[con] = repCons[con];
+      if (con !== "parent" && this[con]) {
+        this[con].parent = this;
+      } else {
+        repCons.parent[repSide] = this;
+      }
+    }
+    for (con in ownCons) {
+      replacement[con] = ownCons[con];
+      if (con !== "parent" && replacement[con]) {
+        replacement[con].parent = replacement;
+      } else if (replacement.parent) {
+        replacement.parent[ownSide] = replacement;
+      }
+    }
   }
 };
 

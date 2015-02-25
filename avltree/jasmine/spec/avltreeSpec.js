@@ -41,6 +41,106 @@ describe("AVLTreeNode", function () {
     expect(n1.height).toEqual(2);
   });
 
+  it("can be swapped with a leaf only child", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n1.insert(n2);
+    n1.swap(n2);
+    expect(n1.parent).toEqual(n2);
+    expect(n1.left).toEqual(null);
+    expect(n2.parent).toEqual(null);
+    expect(n2.left).toEqual(n1);
+  });
+
+  it("hands off children when swapped with its own child", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n1.insert(n2);
+    n1.insert(n3);
+    n1.swap(n2);
+    expect(n2.right).toEqual(n3);
+    expect(n3.parent).toEqual(n2);
+  });
+
+  it("can be swapped for a left child with children", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n4 = new AVLTreeNode(1);
+    n1.insert(n2);
+    n1.insert(n3);
+    n1.insert(n4);
+    n1.swap(n2);
+    expect(n4.parent).toEqual(n1);
+    expect(n1.left).toEqual(n4);
+    expect(n1.parent).toEqual(n2);
+    expect(n2.left).toEqual(n1);
+    expect(n2.right).toEqual(n3);
+    expect(n1.right).toEqual(null);
+    expect(n3.parent).toEqual(n2);
+  });
+
+  it("can be swapped for a right child with children", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n4 = new AVLTreeNode(9);
+    n1.insert(n2);
+    n1.insert(n3);
+    n1.insert(n4);
+    n1.swap(n3);
+    expect(n4.parent).toEqual(n1);
+    expect(n1.right).toEqual(n4);
+    expect(n1.parent).toEqual(n3);
+    expect(n3.right).toEqual(n1);
+    expect(n3.left).toEqual(n2);
+    expect(n1.left).toEqual(null);
+    expect(n2.parent).toEqual(n3);
+  });
+
+  it("can be swapped for a leaf descendant", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n4 = new AVLTreeNode(3);
+    n1.insert(n2);
+    n1.insert(n3);
+    n1.insert(n4);
+    n1.swap(n4);
+    expect(n1.parent).toEqual(n2);
+    expect(n2.right).toEqual(n1);
+    expect(n1.right).toEqual(null);
+    expect(n1.left).toEqual(null);
+    expect(n4.parent).toEqual(null);
+    expect(n4.left).toEqual(n2);
+    expect(n4.right).toEqual(n3);
+    expect(n2.parent).toEqual(n4);
+    expect(n3.parent).toEqual(n4);
+  });
+
+  it("can be swapped for a descendant with children", function () {
+    n1 = new AVLTreeNode(5);
+    n2 = new AVLTreeNode(2);
+    n3 = new AVLTreeNode(7);
+    n4 = new AVLTreeNode(4);
+    n5 = new AVLTreeNode(9);
+    n6 = new AVLTreeNode(1);
+    n7 = new AVLTreeNode(3);
+    n1.insert(n2);
+    n1.insert(n3);
+    n1.insert(n4);
+    n1.insert(n5);
+    n1.insert(n6);
+    n1.insert(n7);
+    n1.swap(n4);
+    expect(n1.left).toEqual(n7);
+    expect(n7.parent).toEqual(n1);
+    expect(n1.right).toEqual(null);
+    expect(n1.parent).toEqual(n2);
+    expect(n2.right).toEqual(n1);
+  });
+
   it("can be deleted", function () {
     n1 = new AVLTreeNode(5);
     n2 = new AVLTreeNode(2);
