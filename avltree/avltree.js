@@ -152,13 +152,7 @@ AVLTreeNode.prototype.removeChild = function (child) {
   } else if (this.right === child) {
     direction = "right";
   }
-  if (child.left) {
-    this[direction] = child.left;
-  } else if (child.right) {
-    this[direction] = child.right;
-  } else {
-    this[direction] = null;
-  }
+  this[direction] = null;
   child.parent = null;
   this.updateHeight();
   return child;
@@ -278,6 +272,8 @@ AVLTreeNode.prototype.swap = function (replacement) {
       }
     }
   }
+  this.updateHeight();
+  replacement.updateHeight();
 };
 
 AVLTreeNode.prototype.updateHeight = function () {

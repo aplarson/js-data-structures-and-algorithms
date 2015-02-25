@@ -191,6 +191,7 @@ describe("AVLTree", function () {
     expect(t.root.value).toEqual(7);
     expect(t.right().value).toEqual(9);
     expect(t.left().value).toEqual(5);
+    expect(t.left().right).toEqual(null);
   });
 
   it("rotates if you add two nodes on the left", function () {
@@ -198,6 +199,7 @@ describe("AVLTree", function () {
     insertSequence(t, [9, 7, 5]);
     expect(t.root.value).toEqual(7);
     expect(t.right().value).toEqual(9);
+    expect(t.right().left).toEqual(null);
     expect(t.left().value).toEqual(5);
   });
 
@@ -231,6 +233,7 @@ describe("AVLTree", function () {
 
   it("rotates subtrees right", function () {
     t = new AVLTree();
+    debugger
     insertSequence(t, [5, 7, 9, 2, 1]);
     expect(t.left().value).toEqual(2);
     expect(t.left().left.value).toEqual(1);
