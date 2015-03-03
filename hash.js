@@ -3,6 +3,10 @@ function KeyStore () {
   this.entryCount = 0;
 }
 
+KeyStore.prototype.bucketCount = function () {
+  return this.buckets.length;
+};
+
 KeyStore.prototype.include = function (el) {
   var bucket = this.buckets[Math.floor(el % this.buckets.length)];
   return bucket.indexOf(el) >= 0;
@@ -52,31 +56,9 @@ KeyStore.prototype.elLoc = function (el) {
   return bucketNum + this.buckets.length * this.buckets[bucketNum].indexOf(el);
 };
 
-function ValStore () {
-  this.values = [];
-}
-
-ValStore.prototype.delete = function (loc) {
-  this.values[loc] = null;
-};
-
-ValStore.prototype.insert = function (val, loc) {
-  this.values[loc] = val;
-};
-
-ValStore.prototype.reset = function () {
-  this.values = [];
-};
-
-ValStore.prototype.retrieve = function (pos) {
-  return this.values[pos];
-};
-
 function HashMap () {
   this.keys = new KeyStore();
   this.values = [];
-  this.pairCount = 0;
-  this.keyBucketCount = this.keys.buckets.length;
 }
 
 HashMap.prototype.delete = function (key) {
@@ -92,7 +74,7 @@ HashMap.prototype.delete = function (key) {
 
 HashMap.prototype.insert = function (key, val) {
   var hashCode = Math.abs(key.hashCode());
-  if (this.pairCount > this.keyBucketCount - 1) {
+  if (this.pairCount() > this.keyBucketCount() - 1) {
     this.remap();
   }
   this.keys.insert(hashCode);
@@ -100,6 +82,10 @@ HashMap.prototype.insert = function (key, val) {
   this.values[elLoc] = val;
   return true;
 };
+
+HashMap.prototype.keyBucketCount = function () {
+  return this.keys.bucketCount();
+}
 
 HashMap.prototype.lookUp = function (key) {
   var hashCode = Math.abs(key.hashCode());
@@ -110,19 +96,23 @@ HashMap.prototype.lookUp = function (key) {
   return this.values[loc];
 };
 
+HashMap.prototype.pairCount = function () {
+  return this.keys.entryCount;
+};
+
 HashMap.prototype.remap = function () {
+  var hash = this;
   var oldKeyBuckets = this.keys.buckets;
   var oldValues = this.values;
   this.keys.resize();
   this.values = [];
   oldKeyBuckets.forEach(function (keyBucket, bucketIdx) {
     keyBucket.forEach(function (key, idx) {
-      var newLoc = this.keys.elLoc(key);
+      var newLoc = hash.keys.elLoc(key);
       var oldLoc = bucketIdx + oldKeyBuckets.length * idx;
-      this.values[newLoc] = oldValues[oldLoc];
+      hash.values[newLoc] = oldValues[oldLoc];
     });
   });
-  this.keyBucketCount = this.keys.buckets.length;
 };
 
 // Thanks, Stack Overflow

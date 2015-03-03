@@ -28,7 +28,7 @@ AVLTree.prototype.insert = function (value) {
   if (typeof this.root === "undefined") {
     this.root = node;
   } else {
-    var result = this.root.insert(node);
+    result = this.root.insert(node);
     if (result) {
       this.root = result;
       return true;
@@ -79,9 +79,10 @@ AVLTreeNode.prototype.balanceFactor = function () {
 };
 
 AVLTreeNode.prototype.delete = function () {
+  var parent, direction, swapNode, newRoot;
   if (this.parent) {
-    var parent = this.parent;
-    var direction = this.side();
+    parent = this.parent;
+    direction = this.side();
     if (!this.left || !this.right) {
       this.parent.removeChild(this);
       if (this.left) {
@@ -91,19 +92,19 @@ AVLTreeNode.prototype.delete = function () {
       }
       return parent.rotate();
     } else {
-      var swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
+      swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
       this.swap(swapNode);
       return this.delete();
     }
   } else {
     if (!this.left || !this.right) {
-      var direction = this.left ? "left" : "right";
-      var newRoot = this[direction];
+      direction = this.left ? "left" : "right";
+      newRoot = this[direction];
       this[direction].parent = null;
       this[direction] = null;
       return newRoot;
     } else {
-      var swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
+      swapNode = this.left ? this.findPredecessor() : this.findSuccessor();
       this.swap(swapNode);
       return this.delete();
     }
