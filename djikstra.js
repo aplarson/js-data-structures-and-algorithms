@@ -8,7 +8,7 @@ function shortestPaths (vertices, start) {
       unvisited.insert(vertex.value);
     }
   });
-  paths[start.value] = { prevEdge: null, totalCost: 0, edges: start.edges };
+  paths[start.value] = { prevEdge: null, totalCost: 0 };
 
   var current = start;
   var complete = false;
