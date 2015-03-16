@@ -3,9 +3,9 @@ function Vertex (value) {
   this.edges = [];
 }
 
-Vertex.prototype.connect = function (vertex) {
+Vertex.prototype.connect = function (vertex, cost) {
   var edge;
-  edge = new Edge(this, vertex);
+  edge = new Edge(this, vertex, cost);
   this.edges.push(edge);
   vertex.edges.push(edge);
 }
