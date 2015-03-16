@@ -1,16 +1,18 @@
 function shortestPaths (vertices, start) {
   var paths = {};
-  var unvisited = {};
+  var unvisited = new BTreeHeap();
   var visited = {};
   vertices.forEach(function (vertex) {
-    paths[vertex.value] = { vertex: vertex, totalCost: Infinity };
-    unvisited[vertex.value] = true;
+    if (vertex !== start) {
+      paths[vertex.value] = { vertex: vertex, totalCost: Infinity };
+      unvisited.insert(vertex.value);
+    }
   });
   paths[start.value] = { prevEdge: null, totalCost: 0, edges: start.edges };
 
-  var completed = false;
   var current = start;
-  while (!completed) {
+  var complete = false;
+  while (!complete) {
     current.edges.forEach(function (edge) {
       var vertex = edge.otherVertex(current);
       var cost = paths[current.value].totalCost + edge.cost;
@@ -20,16 +22,11 @@ function shortestPaths (vertices, start) {
       }
     });
     visited[current.value] = true;
-    delete unvisited[current.value];
-    if (Object.getOwnPropertyNames(unvisited).length === 0) {
-      completed = true;
+
+    if (unvisited.length > 0) {
+      current = paths[unvisited.extract()].vertex;
     } else {
-      current = { totalCost: Infinity }
-      for (var vert in unvisited) {
-        if (paths[vert].totalCost < current.totalCost) {
-          current = paths[vert].vertex;
-        }
-      }
+      complete = true;
     }
   }
 

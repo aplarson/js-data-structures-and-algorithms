@@ -1,5 +1,6 @@
 function BTreeHeap () {
   this.heap = [];
+  this.length = 0;
 }
 
 BTreeHeap.prototype.childVals = function (parentIdx) {
@@ -21,6 +22,7 @@ BTreeHeap.prototype.extract = function () {
   } else {
     this.heap.pop();
   }
+  this.length -= 1;
   return min;
 };
 
@@ -52,5 +54,6 @@ BTreeHeap.prototype.insert = function (value) {
     curIdx = parentIdx
     parentIdx = Math.floor((curIdx - 1) / 2);
   }
+  this.length += 1;
   return true;
 };
