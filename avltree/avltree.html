@@ -24,14 +24,14 @@
     if (!isNaN(parseInt(input.val()))) {
       v.insert(parseInt(input.val()));
       input.val('');
-      input.focus();
     }
+    input.focus();
   });
   $("#delete").on("click", function (event) {
     if (!isNaN(parseInt(input.val()))) {
       v.delete(parseInt(input.val()));
       input.val('');
-      input.focus();
     }
+    input.focus();
   });
 </script>
