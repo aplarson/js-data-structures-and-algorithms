@@ -7,27 +7,24 @@
 </div>
 
 
+<label>Number
+  <input id="node-id" type="number">
+</label>
+<button id="insert">Insert Node</button>
+<button id="delete">Delete Node</button>
+
 <script>
   var t = new AVLTree();
   t.insert(5);
   var v = new AVLTreeIllustrator(t);
   v.drawTree();
-  var i = 0;
-  var interval = setInterval(function () {
-    if (i < 50) {
-      v.insert(Math.floor(Math.random() * 100));
-      i += 1;
-    } else {
-      clearInterval(interval);
-      var j = 0;
-      var newInterval = setInterval(function () {
-        if (j < 50) {
-          v.delete(Math.floor(Math.random() * 100));
-          j += 1;
-        } else {
-          clearInterval(newInterval);
-        }
-      }, 1000);
-    }
-  }, 1000);
+
+  $("#insert").on("click", function (event) {
+    v.insert(parseInt($("#node-id").val()));
+    $("#node-id").val('');
+  });
+  $("#delete").on("click", function (event) {
+    v.delete(parseInt($("#node-id").val()));
+    $("#node-id").val('');
+  });
 </script>
