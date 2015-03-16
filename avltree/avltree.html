@@ -18,13 +18,20 @@
   t.insert(5);
   var v = new AVLTreeIllustrator(t);
   v.drawTree();
+  var input = $("#node-id");
 
   $("#insert").on("click", function (event) {
-    v.insert(parseInt($("#node-id").val()));
-    $("#node-id").val('');
+    if (!isNaN(parseInt(input.val()))) {
+      v.insert(parseInt(input.val()));
+      input.val('');
+      input.focus();
+    }
   });
   $("#delete").on("click", function (event) {
-    v.delete(parseInt($("#node-id").val()));
-    $("#node-id").val('');
+    if (!isNaN(parseInt(input.val()))) {
+      v.delete(parseInt(input.val()));
+      input.val('');
+      input.focus();
+    }
   });
 </script>
