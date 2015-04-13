@@ -1,12 +1,12 @@
 function BTreeHeap () {
-  this.heap = [];
+  this.store = [];
   this.length = 0;
 }
 
 BTreeHeap.prototype.childVals = function (parentIdx) {
   var left, right;
-  left = this.heap[2 * parentIdx + 1];
-  right = this.heap[(2 * parentIdx) + 2];
+  left = this.store[2 * parentIdx + 1];
+  right = this.store[(2 * parentIdx) + 2];
   if (typeof left === "undefined") {
     return [];
   } else if (typeof right === "undefined") {
@@ -16,12 +16,12 @@ BTreeHeap.prototype.childVals = function (parentIdx) {
 };
 
 BTreeHeap.prototype.extract = function () {
-  var min = this.heap[0];
-  if (this.heap.length > 1) {
-    this.heap[0] = this.heap.pop();
-    this.heapifyDown(0);
+  var min = this.store[0];
+  if (this.store.length > 1) {
+    this.store[0] = this.store.pop();
+    this.storeifyDown(0);
   } else {
-    this.heap.pop();
+    this.store.pop();
   }
   this.length -= 1;
   return min;
@@ -29,31 +29,31 @@ BTreeHeap.prototype.extract = function () {
 
 BTreeHeap.prototype.heapifyDown = function (parentIdx) {
   var childVals, values, min, minIdx, childIdx, switchVal;
-  if (!this.heap[parentIdx]) {
+  if (!this.store[parentIdx]) {
     return false;
   }
   childVals = this.childVals(parentIdx);
-  values = [this.heap[parentIdx]].concat(childVals);
+  values = [this.store[parentIdx]].concat(childVals);
   min = Math.min.apply(Math, values);
   minIdx = values.indexOf(min);
   if (minIdx !== 0) {
     childIdx = (2 * parentIdx) + minIdx;
-    switchVal = this.heap[childIdx];
-    this.heap[childIdx] = this.heap[parentIdx];
-    this.heap[parentIdx] = switchVal;
-    this.heapifyDown(childIdx);
+    switchVal = this.store[childIdx];
+    this.store[childIdx] = this.store[parentIdx];
+    this.store[parentIdx] = switchVal;
+    this.storeifyDown(childIdx);
   }
   return true;
 };
 
 BTreeHeap.prototype.insert = function (value) {
   var curIdx, parentIdx;
-  this.heap.push(value);
-  curIdx = this.heap.length - 1;
+  this.store.push(value);
+  curIdx = this.store.length - 1;
   parentIdx = Math.floor((curIdx - 1) / 2);
-  while (value < this.heap[parentIdx]) {
-    this.heap[curIdx] = this.heap[parentIdx];
-    this.heap[parentIdx] = value;
+  while (value < this.store[parentIdx]) {
+    this.store[curIdx] = this.store[parentIdx];
+    this.store[parentIdx] = value;
     curIdx = parentIdx;
     parentIdx = Math.floor((curIdx - 1) / 2);
   }
