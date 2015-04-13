@@ -19,7 +19,7 @@ BTreeHeap.prototype.extract = function () {
   var min = this.store[0];
   if (this.store.length > 1) {
     this.store[0] = this.store.pop();
-    this.storeifyDown(0);
+    this.heapifyDown(0);
   } else {
     this.store.pop();
   }
@@ -41,7 +41,7 @@ BTreeHeap.prototype.heapifyDown = function (parentIdx) {
     switchVal = this.store[childIdx];
     this.store[childIdx] = this.store[parentIdx];
     this.store[parentIdx] = switchVal;
-    this.storeifyDown(childIdx);
+    this.heapifyDown(childIdx);
   }
   return true;
 };
